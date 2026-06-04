@@ -1384,3 +1384,111 @@ textarea.field {
     padding: 22px;
   }
 }
+
+/* Final mobile cleanup — prevent badge/title overlaps */
+.status {
+  max-width: calc(100% - 40px);
+  line-height: 1.2;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.festival-card-image {
+  min-height: 440px;
+}
+
+.festival-card-content {
+  padding-top: 104px;
+}
+
+.festival-card h2 {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.detail-hero .mobile-only {
+  margin-bottom: 16px;
+}
+
+.detail-badge {
+  margin-top: 10px;
+  margin-bottom: 24px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.detail-hero .hero-copy h1 {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+@media (max-width: 760px) {
+  .festival-card-image {
+    height: 470px;
+    min-height: 470px;
+  }
+
+  .festival-card-content {
+    padding: 116px 22px 22px;
+  }
+
+  .festival-location {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    line-height: 1.25;
+  }
+
+  .festival-card h2 {
+    font-size: clamp(28px, 9vw, 38px);
+    line-height: 1.02;
+  }
+
+  .status {
+    top: 18px;
+    left: 18px;
+    padding: 9px 13px;
+    font-size: 10px;
+    letter-spacing: 0.13em;
+  }
+
+  .detail-hero-content {
+    padding-top: 22px;
+  }
+
+  .detail-badge {
+    display: flex;
+    width: 100%;
+    border-radius: 26px;
+    padding: 13px 16px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    line-height: 1.35;
+  }
+
+  .detail-hero .hero-copy h1 {
+    font-size: clamp(39px, 10.8vw, 48px);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+}
+
+@media (max-width: 390px) {
+  .festival-card-image {
+    height: 500px;
+    min-height: 500px;
+  }
+
+  .festival-card h2 {
+    font-size: 30px;
+  }
+
+  .application-counter-card span {
+    font-size: 12px;
+  }
+
+  .detail-hero .hero-copy h1 {
+    font-size: 38px;
+  }
+}
