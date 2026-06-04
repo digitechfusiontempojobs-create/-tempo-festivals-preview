@@ -183,9 +183,17 @@
           submitButton.textContent = "Envoi en cours...";
         }
 
+        const formData = new FormData(form);
+        if (!formData.has("cc_email")) {
+          formData.append("cc_email", "contact@tempojobs.fr");
+        }
+        if (festivalSlug === "do-you-remember" && !formData.has("recipient_email")) {
+          formData.append("recipient_email", "adn.reseau.france@gmail.com");
+        }
+
         const response = await fetch(endpoint, {
           method: "POST",
-          body: new FormData(form),
+          body: formData,
         });
 
         if (!response.ok) throw new Error("Request failed");
