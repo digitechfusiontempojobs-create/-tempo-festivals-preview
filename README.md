@@ -11,10 +11,3 @@ URLs après activation de GitHub Pages :
 - `/do-you-remember.html`
 
 Cette version est statique et destinée à la prévisualisation de la maquette.
-
-
-## Emails candidatures
-
-Toutes les candidatures doivent être envoyées en copie à : contact@tempojobs.fr
-
-Pour DO YOU REMEMBER Festival, les candidatures doivent aussi être envoyées à : adn.reseau.france@gmail.com
