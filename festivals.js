@@ -164,6 +164,83 @@
   }
 
   if (form) {
+    function getFieldValue(formData, name) {
+      return String(formData.get(name) || "").trim();
+    }
+
+    function buildMailFallbackUrl(formData, festivalSlug) {
+      const festivalName = getFieldValue(formData, "festival") || "Festival Tempo Jobs";
+      const firstName = getFieldValue(formData, "first_name");
+      const lastName = getFieldValue(formData, "last_name");
+      const email = getFieldValue(formData, "email");
+      const phone = getFieldValue(formData, "phone");
+      const availability = getFieldValue(formData, "availability");
+      const preferredMission = getFieldValue(formData, "preferred_mission");
+      const message = getFieldValue(formData, "message");
+      const attachmentCount = fileInput && fileInput.files ? fileInput.files.length : 0;
+      const partnerEmail = getFieldValue(formData, "recipient_email");
+      const tempoEmail = getFieldValue(formData, "cc_email") || "contact@tempojobs.fr";
+
+      const recipients = [tempoEmail];
+      const cc = festivalSlug === "do-you-remember" && partnerEmail ? [partnerEmail] : [];
+      const subject = "Candidature benevole - " + festivalName + " - " + firstName + " " + lastName;
+      const bodyLines = [
+        "Bonjour,",
+        "",
+        "Je souhaite proposer ma candidature pour " + festivalName + ".",
+        "",
+        "Prenom : " + firstName,
+        "Nom : " + lastName,
+        "Email : " + email,
+        "Telephone : " + phone,
+        "Disponibilites : " + availability,
+        "Mission souhaitee : " + preferredMission,
+        "",
+        "Motivation / experience / contraintes :",
+        message || "A completer",
+        "",
+        attachmentCount
+          ? "Piece(s) a joindre : " + attachmentCount + " fichier(s) selectionne(s) sur le formulaire. Merci de les ajouter en piece jointe avant d'envoyer cet email."
+          : "Piece(s) jointe(s) : aucune pour le moment.",
+        "",
+        "J'accepte que mes informations soient transmises a l'organisation du festival pour etre recontacte au sujet des missions proposees.",
+        "",
+        "Merci.",
+      ];
+
+      return (
+        "mailto:" +
+        encodeURIComponent(recipients.join(",")) +
+        "?subject=" +
+        encodeURIComponent(subject) +
+        "&body=" +
+        encodeURIComponent(bodyLines.join("\n")) +
+        (cc.length ? "&cc=" + encodeURIComponent(cc.join(",")) : "")
+      );
+    }
+
+    function completeApplicationFormData(formData, festivalSlug) {
+      if (!formData.has("cc_email")) {
+        formData.append("cc_email", "contact@tempojobs.fr");
+      }
+      if (festivalSlug === "do-you-remember" && !formData.has("recipient_email")) {
+        formData.append("recipient_email", "adn.reseau.france@gmail.com");
+      }
+    }
+
+    function openMailFallback(formData, festivalSlug) {
+      const mailtoUrl = buildMailFallbackUrl(formData, festivalSlug);
+      window.location.href = mailtoUrl;
+
+      if (formMessage) {
+        const attachmentCount = fileInput && fileInput.files ? fileInput.files.length : 0;
+        formMessage.textContent = attachmentCount
+          ? "Votre email est prêt. Ajoutez le fichier sélectionné en pièce jointe avant de l'envoyer."
+          : "Votre email est prêt. Envoyez-le pour transmettre votre candidature.";
+        formMessage.classList.add("is-visible");
+      }
+    }
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
@@ -176,6 +253,15 @@
       const festivalSlug = form.getAttribute("data-festival-slug");
       const submitButton = form.querySelector("[type='submit']");
       const originalLabel = submitButton ? submitButton.textContent : "";
+      const mailFallbackOnly = form.hasAttribute("data-mail-fallback-only");
+
+      const fallbackFormData = new FormData(form);
+      completeApplicationFormData(fallbackFormData, festivalSlug);
+
+      if (mailFallbackOnly) {
+        openMailFallback(fallbackFormData, festivalSlug);
+        return;
+      }
 
       try {
         if (submitButton) {
@@ -184,12 +270,7 @@
         }
 
         const formData = new FormData(form);
-        if (!formData.has("cc_email")) {
-          formData.append("cc_email", "contact@tempojobs.fr");
-        }
-        if (festivalSlug === "do-you-remember" && !formData.has("recipient_email")) {
-          formData.append("recipient_email", "adn.reseau.france@gmail.com");
-        }
+        completeApplicationFormData(formData, festivalSlug);
 
         const response = await fetch(endpoint, {
           method: "POST",
@@ -216,11 +297,9 @@
           formMessage.classList.add("is-visible");
         }
       } catch (error) {
-        if (formMessage) {
-          formMessage.textContent =
-            "L'envoi n'a pas abouti. Vérifiez l'endpoint de candidature ou réessayez.";
-          formMessage.classList.add("is-visible");
-        }
+        const errorFallbackFormData = new FormData(form);
+        completeApplicationFormData(errorFallbackFormData, festivalSlug);
+        openMailFallback(errorFallbackFormData, festivalSlug);
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
