@@ -471,50 +471,6 @@ textarea:focus-visible {
   color: rgba(255, 255, 255, 0.63);
 }
 
-.application-counter {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  gap: 10px;
-  border-radius: 999px;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.application-counter strong {
-  display: inline-flex;
-  min-width: 34px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: var(--tempo-yellow);
-  color: #171717;
-  padding: 8px 10px;
-  font-size: 15px;
-}
-
-.application-counter span {
-  font-size: 13px;
-}
-
-.application-counter-card {
-  margin-top: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.11);
-  color: rgba(255, 255, 255, 0.82);
-  padding: 6px 13px 6px 6px;
-  backdrop-filter: blur(14px);
-}
-
-.application-counter-hero {
-  margin-top: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.88);
-  padding: 7px 15px 7px 7px;
-  backdrop-filter: blur(14px);
-}
-
 .volunteer-reward {
   width: min(100%, 560px);
   margin-top: 18px;
@@ -1431,10 +1387,6 @@ textarea.field {
     align-items: flex-start;
   }
 
-  .application-counter-hero {
-    margin-top: 22px;
-  }
-
   .detail-note {
     margin-top: 24px;
     font-size: 17px;
@@ -1549,10 +1501,6 @@ textarea.field {
 
   .festival-card h2 {
     font-size: 30px;
-  }
-
-  .application-counter-card span {
-    font-size: 12px;
   }
 
   .detail-hero .hero-copy h1 {

@@ -12,60 +12,7 @@
   const galleryCaption = document.querySelector("[data-gallery-caption]");
   const previousButton = document.querySelector("[data-gallery-previous]");
   const nextButton = document.querySelector("[data-gallery-next]");
-  const counters = Array.from(document.querySelectorAll("[data-application-counter]"));
   let activeSlide = 0;
-
-  function getCountLabel(count) {
-    return count === 1 ? "candidature envoyée" : "candidatures envoyées";
-  }
-
-  function setCounter(slug, count) {
-    const safeCount = Number.isFinite(Number(count)) ? Math.max(0, Number(count)) : 0;
-
-    counters
-      .filter((counter) => counter.getAttribute("data-application-counter") === slug)
-      .forEach((counter) => {
-        const value = counter.querySelector("[data-counter-value]");
-        const label = counter.querySelector("[data-counter-label]");
-
-        counter.setAttribute("data-count", String(safeCount));
-        if (value) value.textContent = String(safeCount);
-        if (label) label.textContent = getCountLabel(safeCount);
-      });
-  }
-
-  function incrementCounter(slug) {
-    const current = counters.find((counter) => counter.getAttribute("data-application-counter") === slug);
-    const currentCount = current ? Number(current.getAttribute("data-count") || 0) : 0;
-    setCounter(slug, currentCount + 1);
-  }
-
-  function applyStatsPayload(payload) {
-    const stats = payload && payload.counts ? payload.counts : payload;
-    if (!stats) return;
-
-    if (Array.isArray(stats)) {
-      stats.forEach((item) => {
-        if (item && item.slug) setCounter(item.slug, item.count);
-      });
-      return;
-    }
-
-    Object.keys(stats).forEach((slug) => setCounter(slug, stats[slug]));
-  }
-
-  counters.forEach((counter) => {
-    setCounter(counter.getAttribute("data-application-counter"), counter.getAttribute("data-count") || 0);
-  });
-
-  const statsEndpoint =
-    window.TEMPO_FESTIVAL_STATS_ENDPOINT || "/.netlify/functions/festival-application-counts";
-  if (statsEndpoint && counters.length) {
-    fetch(statsEndpoint)
-      .then((response) => (response.ok ? response.json() : null))
-      .then(applyStatsPayload)
-      .catch(() => {});
-  }
 
   function scrollToTarget(selector) {
     const target = document.querySelector(selector);
@@ -182,7 +129,7 @@
       const tempoEmail = getFieldValue(formData, "cc_email") || "contact@tempojobs.fr";
 
       const recipients = [tempoEmail];
-      const cc = festivalSlug === "do-you-remember" && partnerEmail ? [partnerEmail] : [];
+      const cc = partnerEmail ? [partnerEmail] : [];
       const subject = "Candidature benevole - " + festivalName + " - " + firstName + " " + lastName;
       const bodyLines = [
         "Bonjour,",
@@ -287,11 +234,6 @@
         form.reset();
         if (missionConfirmation) missionConfirmation.classList.remove("is-visible");
         missionCards.forEach((card) => card.classList.remove("is-selected"));
-        if (payload && payload.count !== undefined && festivalSlug) {
-          setCounter(festivalSlug, payload.count);
-        } else if (festivalSlug) {
-          incrementCounter(festivalSlug);
-        }
         if (formMessage) {
           formMessage.textContent = "Candidature envoyée. L'équipe pourra te recontacter rapidement.";
           formMessage.classList.add("is-visible");
