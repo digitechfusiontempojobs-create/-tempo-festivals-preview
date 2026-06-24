@@ -122,6 +122,7 @@
       const email = getFieldValue(formData, "email");
       const phone = getFieldValue(formData, "phone");
       const availability = getFieldValue(formData, "availability");
+      const preferredSlots = getFieldValue(formData, "preferred_slots");
       const preferredMission = getFieldValue(formData, "preferred_mission");
       const message = getFieldValue(formData, "message");
       const attachmentCount = fileInput && fileInput.files ? fileInput.files.length : 0;
@@ -141,6 +142,7 @@
         "Email : " + email,
         "Telephone : " + phone,
         "Disponibilites : " + availability,
+        "Creneaux souhaites / contraintes horaires : " + (preferredSlots || "Non precise"),
         "Mission souhaitee : " + preferredMission,
         "",
         "Motivation / experience / contraintes :",
